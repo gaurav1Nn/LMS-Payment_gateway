@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "a backend for lms application",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "yes"
+  },
+  "keywords": [
+    "lms",
+    "payement"
+  ],
+  "author": "Gaurav Nilawar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.0.1",
+    "mongoose": "^8.10.1",
+    "nodemon": "^3.1.9"
+  }
+}
