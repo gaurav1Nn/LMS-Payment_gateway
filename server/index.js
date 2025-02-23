@@ -1,4 +1,4 @@
-console.log("Gaurav Nilawar");
-console.log("wrok needs to be done");
-
-console.log("Hello World");
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+console.log(process.env.PORT);
