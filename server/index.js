@@ -1,10 +1,26 @@
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import hpp from "hpp";
+
+import mongooseSanitize from "express-mongo-sanitize";
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT ;
+// GLOBAL RATE LIMITING
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    limit: 100, // limit each ip to 100 request per window 
+    message: "Too many requests",
+});
+// security middle ware
+app.use(helmet());
+app.use(mongooseSanitize());
+app.use(hpp());
+app.use("/api",limiter);
 // logging middleware
 if(process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
