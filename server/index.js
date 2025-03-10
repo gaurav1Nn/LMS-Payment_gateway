@@ -5,7 +5,9 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import hpp from "hpp";
 
-import mongooseSanitize from "express-mongo-sanitize";
+import cors from "cors";
+import mongoSanitize from "express-mongo-sanitize";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
@@ -18,9 +20,10 @@ const limiter = rateLimit({
 });
 // security middle ware
 app.use(helmet());
-app.use(mongooseSanitize());
+app.use(mongoSanitize());
 app.use(hpp());
 app.use("/api",limiter);
+
 // logging middleware
 if(process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -29,6 +32,7 @@ if(process.env.NODE_ENV === "development") {
 // Body parser Middleware
 app.use(express.json({ limit: "10kb"}));
 app.use(express.urlencoded({ extended: true , limit : "10kb"}));
+app.use(cookieParser());
  // GLOBAL error handler
  app.use((err,req,res,next) => {
           console.error(err.stack);
@@ -39,7 +43,22 @@ app.use(express.urlencoded({ extended: true , limit : "10kb"}));
           });
  });
 
-
+// CORS configutation
+app.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST","PUT","DELETE","PATCH","HEAD" , "OPTIONS"],
+    allowedHeaders :[
+        "Content-type",
+        "Authorization",
+        "X-Requested-With",
+        "device-remember-token",
+        "Acess-control-Allow-Origin",
+        "Origin",
+        "Accept",
+    ],
+}));
+//API ROUTES
 // it should be always at bottom 
 // 404 handler
 app.use((req,res)=> {
