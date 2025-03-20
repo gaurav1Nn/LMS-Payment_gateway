@@ -23,9 +23,10 @@ class DatabaseConnection{
         mongoose.connection.on("disconnected",() => {
             console.log('Database disconnected');
             this.isConnected = false;
-            // to do : attempt a reconnection
+            this.Handledisconnection()
+        });
 
-        })
+        process.on('SIGTERM', this.handleAppTermination.bind(this)); // what is this bind ?
     }
     async connect() {
         try {
@@ -97,3 +98,9 @@ class DatabaseConnection{
         }
     }
 }
+
+
+// create a singleton instance
+const dbConnection = new DatabaseConnection();
+export default dbConnection.connection.bind(dbConnection)
+export const getDBStatus = dbConnection.getConnectionStatus.bind(dbConnection);
