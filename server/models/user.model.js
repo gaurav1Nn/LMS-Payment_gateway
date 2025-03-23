@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true, // all emails will be stored in lowercase
       match: [
-        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, // regular expression for email validation
         "Please provide a valid email",
       ],
     },
@@ -80,7 +80,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = await bcrypt.hash(this.password, 12); // usually use 10 or 12
   next();
 });
 
@@ -101,7 +101,7 @@ userSchema.methods.getResetPasswordToken = function () {
 };
 
 // Virtual field for total enrolled courses
-userSchema.virtual("totalEnrolledCourses").get(function () {
+userSchema.virtual("totalEnrolledCourses").get(function () { // calulated fields
   return this.enrolledCourses?.length;
 });
 
